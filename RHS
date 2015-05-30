@@ -1,0 +1,103 @@
+\ Sectional Properties_RHS
+\ Variable declaration
+\
+fvariable dist-x
+fvariable dist-y
+fvariable thick-x
+fvariable thick-y
+fvariable yy-cut
+fvariable xx-cut
+fvariable hole-x
+fvariable hole-y
+fvariable Out-Area
+fvariable In-Area
+fvariable Area
+fvariable Ixx
+fvariable Iyy
+fvariable A-ybar
+fvariable A-xbar
+\
+\ Store Area Values
+\
+: !dist-x dist-x f! ;
+: !dist-y dist-y f! ;
+: !thick-x thick-x f! ;
+: !thick-y thick-y f! ;
+: !hole-x dist-x f@ thick-x f@ 2.e0 f* f- hole-x f! ;
+: !hole-y dist-y f@ thick-y f@ 2.e0 f* f- hole-y f! ;
+: !xx-cut xx-cut f! ;
+: !yy-cut yy-cut f! ;
+\
+: !Out-Area
+   dist-x f@ dist-y f@ f* Out-Area f! ;
+\
+: !In-Area
+   hole-x f@
+   hole-y f@
+   f* In-Area f! ;
+\
+ : !Area
+   Out-Area f@
+   In-Area f@
+   f- Area f! ;
+\
+: !Ixx ( dist-x dist-y hole-x hole-y -- Second moment of area of a Rectangle )
+   dist-x f@ dist-y f@
+   fdup fdup f* f* f* 12.e0 f/
+   hole-x f@ hole-y f@
+   fdup fdup f* f* f* 12.e0 f/ f-
+   Ixx f! ;
+\
+: !Iyy ( dist-y dist-x hole-y hole-x -- Second moment of area of a Rectangle )
+   dist-y f@ dist-x f@
+   fdup fdup f* f* f* 12.e0 f/
+   hole-y f@ hole-x f@
+   fdup fdup f* f* f* 12.e0 f/ f-
+   Iyy f!  ;
+: !A-ybar
+   Out-Area f@ 2.e0 f/ dist-y f@ 4.e0 f/ f*
+   In-Area f@ 2.e0 f/ hole-y f@ 4.e0 f/ f*
+   thick-x f@ 2.e0 f* yy-cut f@ f*
+   f- f- A-ybar f! ;
+
+: !A-xbar
+   Out-Area f@ 2.e0 f/ dist-x f@ 4.e0 f/ f*
+   In-Area f@ 2.e0 f/ hole-x f@ 4.e0 f/ f*
+   thick-y f@ 2.e0 f* xx-cut f@ f*
+   f- f- A-xbar f! ;
+
+   
+\
+\ Print Area Values
+\
+: .Out-Area Out-Area f@ cr f. ." mm²" cr ;
+\
+: .In-Area In-Area f@ cr f. ." mm²" cr ;
+\
+: .Area Area f@ cr f. ." mm²" cr ;
+\
+: .Ixx Ixx f@ cr f. ." mm⁴" cr ;
+\
+: .Iyy Iyy f@ cr f. ." mm⁴" cr ;
+: .A-ybar A-ybar f@ cr f. ." mm³" cr ;
+: .A-xbar A-xbar f@ cr f. ." mm³" cr ;
+\
+\
+: Update-Area cr
+   !Out-Area
+   !hole-x
+   !hole-y
+   !In-Area
+   !Area
+   !Ixx
+   !Iyy
+   !A-ybar
+   !A-xbar
+   ." Outer Area of RHS is" .Out-Area
+   ." Inner Area of RHS is" .In-Area
+   ." Area of RHS is" .Area
+   ." Ixx of RHS is" .Ixx 
+   ." Iyy of RHS is" .Iyy 
+   ." 1st Moment of area for the shear Vy is " .A-ybar
+   ." 1st Moment of area for the shear Vx is " .A-xbar
+;

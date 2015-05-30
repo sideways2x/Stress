@@ -1,0 +1,73 @@
+\ Plane Stress
+\ Variable declaration
+\
+fvariable Fx
+fvariable Fy
+fvariable Fz
+\
+fvariable Fx-dy
+fvariable Fx-dz
+fvariable Fy-dx
+fvariable Fy-dz
+fvariable Fz-dx
+fvariable Fz-dy
+\
+fvariable Mx-in
+fvariable My-in
+fvariable Tz-in
+\
+fvariable Mx
+fvariable My
+fvariable Tz
+\
+\ Store Force and Moment and Torsion Values
+\
+: !Fx Fx f! ;
+: !Fy Fy f! ;
+: !Fz Fz f! ;
+\
+: !Fx-dy Fx-dy f! ;
+: !Fx-dz Fx-dz f! ;
+: !Fy-dx Fy-dx f! ;
+: !Fy-dz Fy-dz f! ;
+: !Fz-dx Fz-dx f! ;
+: !Fz-dy Fz-dy f! ;
+\
+: !Mx-in Mx-in f! ;
+: !My-in My-in f! ;
+: !Tz-in Tz-in f! ;
+\
+: !Mx
+   Fy f@ Fy-dz f@ f*
+   Fz f@ Fz-dy f@ f*
+   Mx-in f@ f+ f+
+   Mx f! ;
+: !My
+   Fx f@ Fx-dz f@ f*
+   Fz f@ Fz-dx f@ f*
+   My-in f@ f+ f+ 
+   My f! ;
+: !Tz
+   Fx f@ Fx-dy f@ f*
+   Fy f@ Fy-dx f@ f*
+   Tz-in f@ f+ f+ 
+   Tz f! ;
+\
+\ Print Area Values
+\
+: .Mx Mx f@ cr f. ." N.mm" cr ;
+\
+: .My My f@ cr f. ." N.mm" cr ;
+\
+: .Tz Tz f@ cr f. ." N.mm" cr ;
+\
+\
+\
+ : Update-Stress cr
+   !Mx
+   !My
+   !Tz
+   ." Moment about x-axis is " .Mx
+   ." Moment about y-axis is " .My
+   ." Torsion about z-axis is " .Tz
+ ;
